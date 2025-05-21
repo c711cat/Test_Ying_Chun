@@ -16,10 +16,10 @@
       </thead>
       <tbody>
         <tr v-for="(item,index) in personData" :key="item.Name+index">
-          <td><input type="text" name="name" id="" :value="item.Name"></td>
-          <td><input type="date" name="birthdat" id="" :value="item.DateOfBirth.split('T')[0]"></td>
-          <td><input type="range" name="salary" min="0" max="100000" id="" :value="item.Salary"></td>
-          <td><input type="text" name="address" id="" :value="item.Address"></td>
+          <td><input type="text" name="name" id="" v-model.trim="item.Name"></td>
+          <td><input type="date" name="birthdat" id="" v-model="item.DateOfBirth"></td>
+          <td><input type="range" name="salary" min="0" max="100000" id="" v-model.number="item.Salary"></td>
+          <td><input type="text" name="address" id="" v-model.trim="item.Address"></td>
         </tr>
       </tbody>
     </table>
@@ -40,7 +40,12 @@ export default{
     async getData(){
       try {
         const response = await axios.get('http://nexifytw.mynetgear.com:45000/api/Record/GetRecords');
-        this.personData = response.data.Data;
+        this.personData = response.data.Data.map(item => {
+          if(item.DateOfBirth){
+            item.DateOfBirth = item.DateOfBirth.split('T')[0]
+          }
+          return item
+        })
       } catch (error) {
         this.errorMsg = error.message
       }
