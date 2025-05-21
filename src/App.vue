@@ -4,6 +4,13 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <div>
+    <h1>eiofjewoifjiwe</h1>
+    <div>
+      <p>fowefjowijexmw</p>
+      <div><img src="" alt="" /></div>
+    </div>
+  </div>
+  <div>
     <a href="https://vite.dev" target="_blank">
       <img src="/vite.svg" class="logo" alt="Vite logo" />
     </a>
