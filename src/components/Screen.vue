@@ -1,7 +1,7 @@
 <template>
   <main class="wrap">
      <section class="btnBox">
-      <div><button type="button" class="blueBtn">Add</button></div>
+      <div><button @click="add" type="button" class="blueBtn">Add</button></div>
       <div><button type="button" class="greenBtn">Save</button></div>
       <div><button type="button" class="redBtn">Update</button></div>
     </section>
@@ -44,7 +44,16 @@ export default{
       } catch (error) {
         this.errorMsg = error.message
       }
-    }
+    },
+    add(){
+      const newPerson = {
+        Name: '',
+        DateOfBirth: '',
+        Salary: 0,
+        Address: ''
+      };
+      this.personData.splice(0,0,newPerson);
+    },
   },
   created(){
     this.getData();
