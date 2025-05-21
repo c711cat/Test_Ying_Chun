@@ -15,11 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,index) in person" :key="item.name+index">
-          <td><input type="text" name="name" id="" :value="item.name"></td>
-          <td><input type="date" name="birthdat" id="" :value="item.birthday"></td>
-          <td><input type="range" name="salary" min="0" max="100000" id="" :value="item.salary"></td>
-          <td><input type="text" name="address" id="" :value="item.address"></td>
+        <tr v-for="(item,index) in personData.Data" :key="item.Name+index">
+          <td><input type="text" name="name" id="" :value="item.Name"></td>
+          <td><input type="date" name="birthdat" id="" :value="item.DateOfBirth.split('T')[0]"></td>
+          <td><input type="range" name="salary" min="0" max="100000" id="" :value="item.Salary"></td>
+          <td><input type="text" name="address" id="" :value="item.Address"></td>
         </tr>
       </tbody>
     </table>
@@ -27,18 +27,30 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default{
   data(){
     return{
-      person:[
-      {name:'anny',birthday:'1988-10-10',salary:100000,address:'djvjks'},
-      {name:'anny',birthday:'1988-10-10',salary:10000,address:'djvjks'},
-      {name:'anny',birthday:'1988-10-10',salary:10000,address:'djvjks'},
-      {name:'anny',birthday:'1988-10-10',salary:10000,address:'djvjks'},
-      {name:'anny',birthday:'1988-10-10',salary:10000,address:'djvjks'}],
+      personData:[],
+      errorMsg:'',
+      
     }
+  },
+  methods:{
+    async getData(){
+      try {
+        const response = await axios.get('http://nexifytw.mynetgear.com:45000/api/Record/GetRecords');
+        this.peopleData = response.data;
+      } catch (error) {
+        this.errorMsg = error
+      }
+    }
+  },
+  created(){
+    this.getData();
   }
-}</script>
+}
+</script>
 
 <style lang="scss" scoped>
 button {
