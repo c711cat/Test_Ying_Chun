@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,index) in personData.Data" :key="item.Name+index">
+        <tr v-for="(item,index) in personData" :key="item.Name+index">
           <td><input type="text" name="name" id="" :value="item.Name"></td>
           <td><input type="date" name="birthdat" id="" :value="item.DateOfBirth.split('T')[0]"></td>
           <td><input type="range" name="salary" min="0" max="100000" id="" :value="item.Salary"></td>
@@ -40,9 +40,9 @@ export default{
     async getData(){
       try {
         const response = await axios.get('http://nexifytw.mynetgear.com:45000/api/Record/GetRecords');
-        this.peopleData = response.data;
+        this.personData = response.data.Data;
       } catch (error) {
-        this.errorMsg = error
+        this.errorMsg = error.message
       }
     }
   },
