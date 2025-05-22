@@ -61,6 +61,15 @@ export default {
     update() {
       this.getData()
     },
+    add() {
+      const newPerson = {
+        Name: '',
+        DateOfBirth: '',
+        Salary: 0,
+        Address: '',
+      }
+      this.personData.splice(0, 0, newPerson)
+    },
     salaryFormat(value) {
       return value.toLocaleString('en-US', {
         minimumFractionDigits: 0,
@@ -88,15 +97,7 @@ export default {
         alert(this.errorMsg)
       }
     },
-    add() {
-      const newPerson = {
-        Name: '',
-        DateOfBirth: '',
-        Salary: 0,
-        Address: '',
-      }
-      this.personData.splice(0, 0, newPerson)
-    },
+
     verify() {
       if (!Array.isArray(this.personData)) {
         alert('this.personData 需為陣列')
