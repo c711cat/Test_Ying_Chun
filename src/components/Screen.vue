@@ -22,7 +22,7 @@
             <input type="text" name="name" v-model.trim="item.Name" />
           </td>
           <td>
-            <input type="date" name="birthdat" v-model="item.DateOfBirth" />
+            <input type="date" name="birthday" v-model="item.DateOfBirth" />
           </td>
           <td>
             <input
