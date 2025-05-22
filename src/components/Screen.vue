@@ -25,13 +25,17 @@
             <input type="date" name="birthday" v-model="item.DateOfBirth" />
           </td>
           <td>
-            <input
-              type="range"
-              name="salary"
-              min="0"
-              max="100000"
-              v-model.number="item.Salary"
-            />
+            <div class="salaryBox">
+              <input
+                class="salaryInput"
+                type="range"
+                name="salary"
+                min="0"
+                max="100000"
+                v-model.number="item.Salary"
+              />
+              <span class="salaryNum"> $ {{ salaryFormat(item.Salary) }} </span>
+            </div>
           </td>
           <td>
             <input type="text" name="address" v-model.trim="item.Address" />
@@ -52,6 +56,12 @@ export default {
     }
   },
   methods: {
+    salaryFormat(value) {
+      return value.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    },
     async getData() {
       try {
         const response = await axios.get(
@@ -174,7 +184,7 @@ input {
   width: 70%;
   padding: 7px 4px;
   border-radius: 3px;
-  border: 1px solid#777777;
+  border: 1px solid #777777;
   font-size: 16px;
 }
 
@@ -205,5 +215,22 @@ input {
 .head {
   text-align: left;
   padding-bottom: 12px;
+}
+
+.salaryBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.salaryNum {
+  width: 70px;
+  color: #0868f9;
+  position: relative;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
 }
 </style>
