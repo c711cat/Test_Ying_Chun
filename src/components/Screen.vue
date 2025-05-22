@@ -1,6 +1,6 @@
 <template>
   <main class="wrap">
-     <section class="btnBox">
+    <section class="btnBox">
       <div><button @click="add" type="button" class="blueBtn">Add</button></div>
       <div><button type="button" class="greenBtn">Save</button></div>
       <div><button type="button" class="redBtn">Update</button></div>
@@ -15,12 +15,25 @@
         </tr>
       </thead>
       <tbody>
-          <td><input type="text" name="name" id="" v-model.trim="item.Name"></td>
-          <td><input type="date" name="birthdat" id="" v-model="item.DateOfBirth"></td>
-          <td><input type="range" name="salary" min="0" max="100000" id="" v-model.number="item.Salary"></td>
-          <td><input type="text" name="address" id="" v-model.trim="item.Address"></td>
         <tr v-for="(item, index) in personData" :key="index">
           <td>
+            <input type="text" name="name" v-model.trim="item.Name" />
+          </td>
+          <td>
+            <input type="date" name="birthdat" v-model="item.DateOfBirth" />
+          </td>
+          <td>
+            <input
+              type="range"
+              name="salary"
+              min="0"
+              max="100000"
+              v-model.number="item.Salary"
+            />
+          </td>
+          <td>
+            <input type="text" name="address" v-model.trim="item.Address" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -28,21 +41,22 @@
 </template>
 
 <script>
-import axios from 'axios';
-export default{
-  data(){
-    return{
-      personData:[],
-      errorMsg:'',
-      
+import axios from 'axios'
+export default {
+  data() {
+    return {
+      personData: [],
+      errorMsg: '',
     }
   },
-  methods:{
-    async getData(){
+  methods: {
+    async getData() {
       try {
-        const response = await axios.get('http://nexifytw.mynetgear.com:45000/api/Record/GetRecords');
+        const response = await axios.get(
+          'http://nexifytw.mynetgear.com:45000/api/Record/GetRecords',
+        )
         this.personData = response.data.Data.map(item => {
-          if(item.DateOfBirth){
+          if (item.DateOfBirth) {
             item.DateOfBirth = item.DateOfBirth.split('T')[0]
           }
           return item
@@ -51,19 +65,20 @@ export default{
         this.errorMsg = error.message
       }
     },
-    add(){
+    add() {
       const newPerson = {
         Name: '',
         DateOfBirth: '',
         Salary: 0,
-        Address: ''
-      };
-      this.personData.splice(0,0,newPerson);
+        Address: '',
+      }
+      this.personData.splice(0, 0, newPerson)
+    },
     },
   },
-  created(){
-    this.getData();
-  }
+  created() {
+    this.getData()
+  },
 }
 </script>
 
@@ -78,7 +93,7 @@ button {
 }
 
 button:hover {
-filter:brightness(1.2);
+  filter: brightness(1.2);
 }
 
 table {
@@ -86,12 +101,13 @@ table {
   border-collapse: collapse;
 }
 
-td , th{
+td,
+th {
   padding: 6px 10px;
-  border-bottom:1px solid #e4e3e6;
+  border-bottom: 1px solid #e4e3e6;
 }
 
-input{
+input {
   width: 70%;
   padding: 7px 4px;
   border-radius: 3px;
@@ -123,9 +139,8 @@ input{
   background-color: #d72d3d;
 }
 
-.head{
+.head {
   text-align: left;
   padding-bottom: 12px;
 }
-
 </style>
