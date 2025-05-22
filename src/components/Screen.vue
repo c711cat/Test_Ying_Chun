@@ -15,11 +15,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item,index) in personData" :key="item.Name+index">
           <td><input type="text" name="name" id="" v-model.trim="item.Name"></td>
           <td><input type="date" name="birthdat" id="" v-model="item.DateOfBirth"></td>
           <td><input type="range" name="salary" min="0" max="100000" id="" v-model.number="item.Salary"></td>
           <td><input type="text" name="address" id="" v-model.trim="item.Address"></td>
+        <tr v-for="(item, index) in personData" :key="index">
+          <td>
         </tr>
       </tbody>
     </table>
