@@ -2,7 +2,9 @@
   <main class="wrap">
     <section class="btnBox">
       <div><button @click="add" type="button" class="blueBtn">Add</button></div>
-      <div><button type="button" class="greenBtn">Save</button></div>
+      <div>
+        <button @click="save" type="button" class="greenBtn">Save</button>
+      </div>
       <div><button type="button" class="redBtn">Update</button></div>
     </section>
     <table class="">
@@ -74,6 +76,61 @@ export default {
       }
       this.personData.splice(0, 0, newPerson)
     },
+    verify() {
+      if (!Array.isArray(this.personData)) {
+        alert('this.personData 需為陣列')
+        return false
+      }
+
+      for (let i = 0; i < this.personData.length; i++) {
+        const item = this.personData[i]
+        if (typeof item.Name !== 'string') {
+          alert('Name 需為字串')
+          return false
+        }
+        if (item.Name.trim() === '') {
+          alert('Name 不得為空白')
+          return false
+        }
+        if (item.DateOfBirth.trim() === '') {
+          alert('Birthday 不得為空白')
+          return false
+        }
+        if (typeof item.Salary !== 'number') {
+          alert('Salary 需為數字')
+          return false
+        }
+        if (typeof item.Address !== 'string') {
+          alert('Address 需為字串')
+          return false
+        }
+        if (item.Address.trim() === '') {
+          alert('Address 不得為空白')
+          return false
+        }
+      }
+      return true
+    },
+    async save() {
+      // 驗證資料
+      if (this.verify() === false) {
+        return
+      }
+      try {
+        const res = await axios.post(
+          'http://nexifytw.mynetgear.com:45000/api/Record/SaveRecords',
+          this.personData,
+        )
+        if (res.status === 200 && res.data.Success === true) {
+          alert('儲存成功')
+          this.getData()
+        } else {
+          alert('未知錯誤')
+        }
+      } catch (error) {
+        this.errorMsg = error.message
+        alert(this.errorMsg)
+      }
     },
   },
   created() {
