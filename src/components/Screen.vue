@@ -57,14 +57,20 @@ export default {
         const response = await axios.get(
           'http://nexifytw.mynetgear.com:45000/api/Record/GetRecords',
         )
-        this.personData = response.data.Data.map(item => {
-          if (item.DateOfBirth) {
-            item.DateOfBirth = item.DateOfBirth.split('T')[0]
-          }
-          return item
-        })
+        if (response.status === 200 && response.data.Success === true) {
+          this.personData = response.data.Data.map(item => {
+            if (item.DateOfBirth) {
+              item.DateOfBirth = item.DateOfBirth.split('T')[0]
+            }
+            return item
+          })
+          alert('成功取得最新資料')
+        } else {
+          alert('未知錯誤')
+        }
       } catch (error) {
         this.errorMsg = error.message
+        alert(this.errorMsg)
       }
     },
     add() {
