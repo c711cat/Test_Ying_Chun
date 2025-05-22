@@ -5,7 +5,9 @@
       <div>
         <button @click="save" type="button" class="greenBtn">Save</button>
       </div>
-      <div><button type="button" class="redBtn">Update</button></div>
+      <div>
+        <button @click="update" type="button" class="redBtn">Update</button>
+      </div>
     </section>
     <table class="">
       <thead>
@@ -56,6 +58,9 @@ export default {
     }
   },
   methods: {
+    update() {
+      this.getData()
+    },
     salaryFormat(value) {
       return value.toLocaleString('en-US', {
         minimumFractionDigits: 0,
@@ -148,9 +153,6 @@ export default {
         alert(this.errorMsg)
       }
     },
-  },
-  created() {
-    this.getData()
   },
 }
 </script>
