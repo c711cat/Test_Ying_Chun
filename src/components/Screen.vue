@@ -5,7 +5,9 @@
       <div>
         <button @click="save" type="button" class="greenBtn">Save</button>
       </div>
-      <div><button type="button" class="redBtn">Update</button></div>
+      <div>
+        <button @click="update" type="button" class="redBtn">Update</button>
+      </div>
     </section>
     <table class="">
       <thead>
@@ -22,16 +24,20 @@
             <input type="text" name="name" v-model.trim="item.Name" />
           </td>
           <td>
-            <input type="date" name="birthdat" v-model="item.DateOfBirth" />
+            <input type="date" name="birthday" v-model="item.DateOfBirth" />
           </td>
           <td>
-            <input
-              type="range"
-              name="salary"
-              min="0"
-              max="100000"
-              v-model.number="item.Salary"
-            />
+            <div class="salaryBox">
+              <input
+                class="salaryInput"
+                type="range"
+                name="salary"
+                min="0"
+                max="100000"
+                v-model.number="item.Salary"
+              />
+              <span class="salaryNum"> $ {{ salaryFormat(item.Salary) }} </span>
+            </div>
           </td>
           <td>
             <input type="text" name="address" v-model.trim="item.Address" />
@@ -52,6 +58,24 @@ export default {
     }
   },
   methods: {
+    update() {
+      this.getData()
+    },
+    add() {
+      const newPerson = {
+        Name: '',
+        DateOfBirth: '',
+        Salary: 0,
+        Address: '',
+      }
+      this.personData.splice(0, 0, newPerson)
+    },
+    salaryFormat(value) {
+      return value.toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+    },
     async getData() {
       try {
         const response = await axios.get(
@@ -73,15 +97,7 @@ export default {
         alert(this.errorMsg)
       }
     },
-    add() {
-      const newPerson = {
-        Name: '',
-        DateOfBirth: '',
-        Salary: 0,
-        Address: '',
-      }
-      this.personData.splice(0, 0, newPerson)
-    },
+
     verify() {
       if (!Array.isArray(this.personData)) {
         alert('this.personData 需為陣列')
@@ -139,9 +155,6 @@ export default {
       }
     },
   },
-  created() {
-    this.getData()
-  },
 }
 </script>
 
@@ -174,7 +187,7 @@ input {
   width: 70%;
   padding: 7px 4px;
   border-radius: 3px;
-  border: 1px solid#777777;
+  border: 1px solid #777777;
   font-size: 16px;
 }
 
@@ -205,5 +218,22 @@ input {
 .head {
   text-align: left;
   padding-bottom: 12px;
+}
+
+.salaryBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.salaryNum {
+  width: 70px;
+  color: #0868f9;
+  position: relative;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0px;
+  margin: 0px;
 }
 </style>
