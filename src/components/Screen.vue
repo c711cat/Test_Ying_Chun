@@ -82,10 +82,11 @@ export default {
           'http://nexifytw.mynetgear.com:45000/api/Record/GetRecords',
         )
         if (response.status === 200 && response.data.Success === true) {
+          if (this.verifyAPIData(response.data.Data) === false) {
+            return
+          }
           this.personData = response.data.Data.map(item => {
-            if (item.DateOfBirth) {
-              item.DateOfBirth = item.DateOfBirth.split('T')[0]
-            }
+            item.DateOfBirth = item.DateOfBirth.split('T')[0]
             return item
           })
           alert('成功取得最新資料')
@@ -96,6 +97,68 @@ export default {
         this.errorMsg = error.message
         alert(this.errorMsg)
       }
+    },
+    verifyAPIData(data) {
+      if (!Array.isArray(data)) {
+        alert('API 回傳資料需為陣列')
+        return false
+      }
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i]
+        if (typeof item.Name !== 'string') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 需為字串`)
+          return false
+        }
+        if (item.Name.trim() === '') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 不得為空白`)
+          return false
+        }
+        if (typeof item.DateOfBirth !== 'string') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為字串`)
+          return false
+        }
+        if (item.DateOfBirth.trim() === '') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 不得為空白`)
+          return false
+        }
+
+        const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?$/
+        if (!isoRegex.test(item.DateOfBirth)) {
+          alert(
+            `第 ${i + 1} (index:${i}) 筆資料 Birthday 格式需為 YYYY-MM-DDTHH:MM:SS 或 YYYY-MM-DDTHH:MM:SS.sss`,
+          )
+          return false
+        }
+        const date = new Date(item.DateOfBirth)
+        const getTime = date.getTime()
+        if (isNaN(getTime)) {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為真實存在日期`)
+          return false
+        }
+        if (getTime > new Date().getTime()) {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為現在到過去的日期`)
+          return false
+        }
+        if (typeof item.Salary !== 'number') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Salary 需為數字`)
+          return false
+        }
+        if (item.Salary < 0 || item.Salary > 100000) {
+          alert(
+            `第 ${i + 1} (index:${i}) 筆資料 Salary 需介於 0 ~ 100,000 之間`,
+          )
+          return false
+        }
+        if (typeof item.Address !== 'string') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 需為字串`)
+          return false
+        }
+        if (item.Address.trim() === '') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 不得為空白`)
+          return false
+        }
+      }
+      return true
     },
 
     verify() {
