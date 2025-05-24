@@ -24,7 +24,12 @@
             <input type="text" name="name" v-model.trim="item.Name" />
           </td>
           <td>
-            <input type="date" name="birthday" v-model="item.DateOfBirth" />
+            <input
+              type="date"
+              name="birthday"
+              :max="maxDate()"
+              v-model="item.DateOfBirth"
+            />
           </td>
           <td>
             <div class="salaryBox">
@@ -58,6 +63,9 @@ export default {
     }
   },
   methods: {
+    maxDate() {
+      return new Date().toISOString().split('T')[0]
+    },
     update() {
       this.getData()
     },
