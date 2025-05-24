@@ -94,8 +94,12 @@ export default {
             return
           }
           this.personData = response.data.Data.map(item => {
-            item.DateOfBirth = item.DateOfBirth.split('T')[0]
-            return item
+            return {
+              Name: item.Name,
+              DateOfBirth: item.DateOfBirth.split('T')[0],
+              Salary: item.Salary,
+              Address: item.Address,
+            }
           })
           alert('成功取得最新資料')
         } else {
