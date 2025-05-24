@@ -24,7 +24,12 @@
             <input type="text" name="name" v-model.trim="item.Name" />
           </td>
           <td>
-            <input type="date" name="birthday" v-model="item.DateOfBirth" />
+            <input
+              type="date"
+              name="birthday"
+              :max="maxDate()"
+              v-model="item.DateOfBirth"
+            />
           </td>
           <td>
             <div class="salaryBox">
@@ -58,6 +63,9 @@ export default {
     }
   },
   methods: {
+    maxDate() {
+      return new Date().toISOString().split('T')[0]
+    },
     update() {
       this.getData()
     },
@@ -79,75 +87,143 @@ export default {
     async getData() {
       try {
         const response = await axios.get(
-          'http://nexifytw.mynetgear.com:45000/api/Record/GetRecords',
+          `${import.meta.env.VITE_API_BASE_URL}/api/Record/GetRecords`,
         )
         if (response.status === 200 && response.data.Success === true) {
+          if (this.verifyAPIData(response.data.Data) === false) {
+            return
+          }
           this.personData = response.data.Data.map(item => {
-            if (item.DateOfBirth) {
-              item.DateOfBirth = item.DateOfBirth.split('T')[0]
+            return {
+              Name: item.Name,
+              DateOfBirth: item.DateOfBirth.split('T')[0],
+              Salary: item.Salary,
+              Address: item.Address,
             }
-            return item
           })
           alert('成功取得最新資料')
         } else {
-          alert('未知錯誤')
+          alert('資料取得失敗，請查看 API 回傳內容')
         }
       } catch (error) {
         this.errorMsg = error.message
         alert(this.errorMsg)
       }
     },
-
-    verify() {
-      if (!Array.isArray(this.personData)) {
-        alert('this.personData 需為陣列')
+    verifyAPIData(data) {
+      if (!Array.isArray(data)) {
+        alert('API 回傳資料需為陣列')
         return false
       }
-
-      for (let i = 0; i < this.personData.length; i++) {
-        const item = this.personData[i]
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i]
         if (typeof item.Name !== 'string') {
-          alert('Name 需為字串')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 需為字串`)
           return false
         }
         if (item.Name.trim() === '') {
-          alert('Name 不得為空白')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 不得為空白`)
+          return false
+        }
+        if (typeof item.DateOfBirth !== 'string') {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為字串`)
           return false
         }
         if (item.DateOfBirth.trim() === '') {
-          alert('Birthday 不得為空白')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 不得為空白`)
+          return false
+        }
+
+        const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?(Z)?$/
+        if (!isoRegex.test(item.DateOfBirth)) {
+          alert(
+            `第 ${i + 1} (index:${i}) 筆資料 Birthday 格式需為 YYYY-MM-DDTHH:MM:SS 或 YYYY-MM-DDTHH:MM:SS.sss`,
+          )
+          return false
+        }
+        const date = new Date(item.DateOfBirth)
+        const getTime = date.getTime()
+        if (isNaN(getTime)) {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為真實存在日期`)
+          return false
+        }
+        if (getTime > new Date().getTime()) {
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為現在到過去的日期`)
           return false
         }
         if (typeof item.Salary !== 'number') {
-          alert('Salary 需為數字')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Salary 需為數字`)
+          return false
+        }
+        if (item.Salary < 0 || item.Salary > 100000) {
+          alert(
+            `第 ${i + 1} (index:${i}) 筆資料 Salary 需介於 0 ~ 100,000 之間`,
+          )
           return false
         }
         if (typeof item.Address !== 'string') {
-          alert('Address 需為字串')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 需為字串`)
           return false
         }
         if (item.Address.trim() === '') {
-          alert('Address 不得為空白')
+          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 不得為空白`)
           return false
         }
       }
       return true
     },
+
+    verifyInputData() {
+      if (!Array.isArray(this.personData)) {
+        alert('this.personData 需為陣列')
+        return false
+      }
+      for (let i = 0; i < this.personData.length; i++) {
+        const item = this.personData[i]
+        if (item.Name.trim() === '') {
+          alert(`第 ${i + 1} 筆資料 Name 不得為空白`)
+          return false
+        }
+
+        if (item.DateOfBirth.trim() === '') {
+          alert(`第 ${i + 1} 筆資料 Birthday 不得為空白`)
+          return false
+        }
+        if (item.Address.trim() === '') {
+          alert(`第 ${i + 1} 筆資料 Address 不得為空白`)
+          return false
+        }
+      }
+      return true
+    },
+    checkName() {
+      const nameSet = new Set()
+      return this.personData.some(item => {
+        if (nameSet.has(item.Name)) {
+          alert(`Name 重複`)
+          return true // 找到第一個重複即終止
+        }
+        nameSet.add(item.Name)
+        return false
+      })
+    },
+
     async save() {
       // 驗證資料
-      if (this.verify() === false) {
+      if (this.verifyInputData() === false || this.checkName() === true) {
         return
       }
+
       try {
         const res = await axios.post(
-          'http://nexifytw.mynetgear.com:45000/api/Record/SaveRecords',
+          `${import.meta.env.VITE_API_BASE_URL}/api/Record/SaveRecords`,
           this.personData,
         )
         if (res.status === 200 && res.data.Success === true) {
           alert('儲存成功')
           this.getData()
         } else {
-          alert('未知錯誤')
+          alert('儲存失敗，請查看 API 回傳內容')
         }
       } catch (error) {
         this.errorMsg = error.message
