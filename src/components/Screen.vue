@@ -87,7 +87,7 @@ export default {
     async getData() {
       try {
         const response = await axios.get(
-          'http://nexifytw.mynetgear.com:45000/api/Record/GetRecords',
+          `${import.meta.env.VITE_API_BASE_URL}/api/Record/GetRecords`,
         )
         if (response.status === 200 && response.data.Success === true) {
           if (this.verifyAPIData(response.data.Data) === false) {
@@ -198,7 +198,7 @@ export default {
       }
       try {
         const res = await axios.post(
-          'http://nexifytw.mynetgear.com:45000/api/Record/SaveRecords',
+          `${import.meta.env.VITE_API_BASE_URL}/api/Record/SaveRecords`,
           this.personData,
         )
         if (res.status === 200 && res.data.Success === true) {
