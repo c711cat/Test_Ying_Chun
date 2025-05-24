@@ -161,36 +161,23 @@ export default {
       return true
     },
 
-    verify() {
+    verifyInputData() {
       if (!Array.isArray(this.personData)) {
         alert('this.personData 需為陣列')
         return false
       }
-
       for (let i = 0; i < this.personData.length; i++) {
         const item = this.personData[i]
-        if (typeof item.Name !== 'string') {
-          alert('Name 需為字串')
-          return false
-        }
         if (item.Name.trim() === '') {
-          alert('Name 不得為空白')
+          alert(`第 ${i + 1} 筆資料 Name 不得為空白`)
           return false
         }
         if (item.DateOfBirth.trim() === '') {
-          alert('Birthday 不得為空白')
-          return false
-        }
-        if (typeof item.Salary !== 'number') {
-          alert('Salary 需為數字')
-          return false
-        }
-        if (typeof item.Address !== 'string') {
-          alert('Address 需為字串')
+          alert(`第 ${i + 1} 筆資料 Birthday 不得為空白`)
           return false
         }
         if (item.Address.trim() === '') {
-          alert('Address 不得為空白')
+          alert(`第 ${i + 1} 筆資料 Address 不得為空白`)
           return false
         }
       }
@@ -198,7 +185,7 @@ export default {
     },
     async save() {
       // 驗證資料
-      if (this.verify() === false) {
+      if (this.verifyInputData() === false) {
         return
       }
       try {
