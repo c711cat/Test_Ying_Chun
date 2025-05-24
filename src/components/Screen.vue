@@ -191,11 +191,24 @@ export default {
       }
       return true
     },
+    checkName() {
+      const nameSet = new Set()
+      return this.personData.some(item => {
+        if (nameSet.has(item.Name)) {
+          alert(`Name 重複`)
+          return true // 找到第一個重複即終止
+        }
+        nameSet.add(item.Name)
+        return false
+      })
+    },
+
     async save() {
       // 驗證資料
-      if (this.verifyInputData() === false) {
+      if (this.verifyInputData() === false || this.checkName() === true) {
         return
       }
+
       try {
         const res = await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/Record/SaveRecords`,
