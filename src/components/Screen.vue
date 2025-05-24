@@ -130,7 +130,7 @@ export default {
           return false
         }
 
-        const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?$/
+        const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?(Z)?$/
         if (!isoRegex.test(item.DateOfBirth)) {
           alert(
             `第 ${i + 1} (index:${i}) 筆資料 Birthday 格式需為 YYYY-MM-DDTHH:MM:SS 或 YYYY-MM-DDTHH:MM:SS.sss`,
