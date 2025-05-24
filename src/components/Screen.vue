@@ -103,7 +103,7 @@ export default {
           })
           alert('成功取得最新資料')
         } else {
-          alert('未知錯誤')
+          alert('資料取得失敗，請查看 API 回傳內容')
         }
       } catch (error) {
         this.errorMsg = error.message
@@ -184,6 +184,7 @@ export default {
           alert(`第 ${i + 1} 筆資料 Name 不得為空白`)
           return false
         }
+
         if (item.DateOfBirth.trim() === '') {
           alert(`第 ${i + 1} 筆資料 Birthday 不得為空白`)
           return false
@@ -222,7 +223,7 @@ export default {
           alert('儲存成功')
           this.getData()
         } else {
-          alert('未知錯誤')
+          alert('儲存失敗，請查看 API 回傳內容')
         }
       } catch (error) {
         this.errorMsg = error.message
