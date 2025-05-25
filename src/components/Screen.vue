@@ -91,6 +91,7 @@ export default {
         )
         if (res.status === 200 && res.data.Success === true) {
           if (this.verifyAPIData(res.data.Data) === false) {
+            alert('資料格式有誤，請聯絡工程師')
             return
           }
           this.personData = res.data.Data.map(item => {
@@ -107,67 +108,68 @@ export default {
           console.error(res.data.Msg)
         }
       } catch (error) {
-        this.errorMsg = error.message
-        alert(this.errorMsg)
+        alert('資料取得失敗')
+        console.error(error)
       }
     },
     verifyAPIData(data) {
       if (!Array.isArray(data)) {
-        alert('API 回傳資料需為陣列')
+        console.error('API 回傳資料需為陣列')
         return false
       }
       for (let i = 0; i < data.length; i++) {
         const item = data[i]
+        //  避免出現 null 或 undefined
         if (typeof item.Name !== 'string') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 需為字串`)
+          console.error(`API 回傳資料 index:${i} Name 需為字串`)
           return false
         }
         if (item.Name.trim() === '') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Name 不得為空白`)
+          console.error(`API 回傳資料 index:${i} Name 不得為空白`)
           return false
         }
         if (typeof item.DateOfBirth !== 'string') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為字串`)
+          console.error(`API 回傳資料 index:${i} Birthday 需為字串`)
           return false
         }
         if (item.DateOfBirth.trim() === '') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 不得為空白`)
+          console.error(`API 回傳資料 index:${i} Birthday 不得為空白`)
           return false
         }
 
         const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(.\d+)?(Z)?$/
         if (!isoRegex.test(item.DateOfBirth)) {
-          alert(
-            `第 ${i + 1} (index:${i}) 筆資料 Birthday 格式需為 YYYY-MM-DDTHH:MM:SS 或 YYYY-MM-DDTHH:MM:SS.sss`,
+          console.error(
+            `API 回傳資料 index:${i} Birthday 格式需為 YYYY-MM-DDTHH:MM:SS 或 YYYY-MM-DDTHH:MM:SS.sss`,
           )
           return false
         }
         const date = new Date(item.DateOfBirth)
         const getTime = date.getTime()
         if (isNaN(getTime)) {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為真實存在日期`)
+          console.error(`API 回傳資料 index:${i} Birthday 需為真實存在日期`)
           return false
         }
         if (getTime > new Date().getTime()) {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Birthday 需為現在到過去的日期`)
+          console.error(`API 回傳資料 index:${i} Birthday 需為現在到過去的日期`)
           return false
         }
         if (typeof item.Salary !== 'number') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Salary 需為數字`)
+          console.error(`API 回傳資料 index:${i} Salary 需為數字`)
           return false
         }
         if (item.Salary < 0 || item.Salary > 100000) {
-          alert(
-            `第 ${i + 1} (index:${i}) 筆資料 Salary 需介於 0 ~ 100,000 之間`,
+          console.error(
+            `API 回傳資料 index:${i} Salary 需介於 0 ~ 100,000 之間`,
           )
           return false
         }
         if (typeof item.Address !== 'string') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 需為字串`)
+          console.error(`API 回傳資料 index:${i} Address 需為字串`)
           return false
         }
         if (item.Address.trim() === '') {
-          alert(`第 ${i + 1} (index:${i}) 筆資料 Address 不得為空白`)
+          console.error(`API 回傳資料 index:${i} Address 不得為空白`)
           return false
         }
       }
@@ -224,11 +226,12 @@ export default {
           alert('儲存成功')
           this.getData()
         } else {
-          alert('儲存失敗，請查看 API 回傳內容')
+          alert('儲存失敗')
+          console.error(res.data)
         }
       } catch (error) {
-        this.errorMsg = error.message
-        alert(this.errorMsg)
+        alert('儲存失敗')
+        console.error(error)
       }
     },
   },
