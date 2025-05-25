@@ -9,7 +9,7 @@
         <button @click="update" type="button" class="redBtn">Update</button>
       </div>
     </section>
-    <table class="">
+    <table>
       <thead>
         <tr>
           <th class="head">Name</th>
