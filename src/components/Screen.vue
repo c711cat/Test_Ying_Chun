@@ -177,17 +177,12 @@ export default {
     },
 
     verifyInputData() {
-      if (!Array.isArray(this.personData)) {
-        alert('this.personData 需為陣列')
-        return false
-      }
       for (let i = 0; i < this.personData.length; i++) {
         const item = this.personData[i]
         if (item.Name.trim() === '') {
           alert(`第 ${i + 1} 筆資料 Name 不得為空白`)
           return false
         }
-
         if (item.DateOfBirth.trim() === '') {
           alert(`第 ${i + 1} 筆資料 Birthday 不得為空白`)
           return false
