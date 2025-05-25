@@ -1,14 +1,14 @@
 <template>
-  <Screen />
+  <PersonManager />
 </template>
 
 <script>
-import Screen from './components/Screen.vue'
+import PersonManager from './components/PersonManager.vue'
 export default {
   data() {
     return {}
   },
-  components: { Screen },
+  components: { PersonManager },
 }
 </script>
 
