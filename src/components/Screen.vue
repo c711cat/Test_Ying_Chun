@@ -86,14 +86,14 @@ export default {
     },
     async getData() {
       try {
-        const response = await axios.get(
+        const res = await axios.get(
           `${import.meta.env.VITE_API_BASE_URL}/api/Record/GetRecords`,
         )
-        if (response.status === 200 && response.data.Success === true) {
-          if (this.verifyAPIData(response.data.Data) === false) {
+        if (res.status === 200 && res.data.Success === true) {
+          if (this.verifyAPIData(res.data.Data) === false) {
             return
           }
-          this.personData = response.data.Data.map(item => {
+          this.personData = res.data.Data.map(item => {
             return {
               Name: item.Name,
               DateOfBirth: item.DateOfBirth.split('T')[0],
@@ -103,7 +103,8 @@ export default {
           })
           alert('成功取得最新資料')
         } else {
-          alert('資料取得失敗，請查看 API 回傳內容')
+          alert('資料取得失敗')
+          console.error(res.data.Msg)
         }
       } catch (error) {
         this.errorMsg = error.message
