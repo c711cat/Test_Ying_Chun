@@ -196,10 +196,10 @@ export default {
     },
     checkName() {
       const nameSet = new Set()
-      return this.personData.some(item => {
+      return this.personData.some((item, index) => {
         if (nameSet.has(item.Name)) {
-          alert(`Name 重複`)
-          return true // 找到第一個重複即終止
+          alert(`Name 不可重複，與第 ${index + 1} 筆資料重複`)
+          return true
         }
         nameSet.add(item.Name)
         return false
